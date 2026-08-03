@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTema } from "@/components/tema";
-import { servirCerveza } from "@/lib/sonido";
+import { alPrimerGesto, servirCerveza } from "@/lib/sonido";
 
 /**
  * Intro de la cervecería: un chopp que se llena, la espuma que sube y el
@@ -36,15 +36,30 @@ export default function SplashCerveceria() {
     const corto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const espera = corto ? 500 : ESPERA;
 
-    const llena = setTimeout(() => {
+    let sale: ReturnType<typeof setTimeout>;
+    let cierra: ReturnType<typeof setTimeout>;
+
+    /** Llena el vaso y programa la salida de la intro. */
+    const servir = (conSonido: boolean) => {
       setLleno(true);
-      // El chorro suena mientras el vaso se llena, no antes ni después.
-      if (!corto) servirCerveza(LLENADO / 1000 + 0.5);
+      if (!corto && conSonido) servirCerveza(LLENADO / 1000 + 0.5);
+      sale = setTimeout(() => setSaliendo(true), espera);
+      cierra = setTimeout(() => setFin(true), espera + SALIDA);
+    };
+
+    // Entrando desde un clic —el menú del patio, un enlace— el navegador ya
+    // permite sonido y se sirve en el acto. Recargando la página no hay gesto
+    // previo y el audio nace mudo: ahí se espera el primero —clic, toque o
+    // tecla— para que el chorro suene junto con el llenado, y si no llega
+    // ninguno en dos segundos se sirve igual, en silencio.
+    let cancelarGesto = () => {};
+    const llena = setTimeout(() => {
+      if (corto || servirCerveza(LLENADO / 1000 + 0.5)) servir(false);
+      else cancelarGesto = alPrimerGesto(servir);
     }, 60);
-    const sale = setTimeout(() => setSaliendo(true), espera);
-    const cierra = setTimeout(() => setFin(true), espera + SALIDA);
 
     return () => {
+      cancelarGesto();
       clearTimeout(llena);
       clearTimeout(sale);
       clearTimeout(cierra);

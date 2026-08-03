@@ -47,19 +47,63 @@ export function pistaPorton() {
 }
 
 /**
+ * Corre `accion` en cuanto el navegador permita sonido.
+ *
+ * Recargando la página no hay ningún gesto previo, así que el audio queda
+ * bloqueado y la intro salía muda. Acá se espera el primer clic, toque o tecla
+ * —que es lo que el navegador acepta como permiso— y recién ahí arranca todo
+ * junto. Si nadie toca nada en `esperaMaxMs`, sigue igual sin sonido: la
+ * pantalla no se queda esperando.
+ *
+ * Devuelve la función para cancelar, para el `useEffect`.
+ */
+export function alPrimerGesto(accion: (conSonido: boolean) => void, esperaMaxMs = 2000) {
+  let hecho = false;
+  const eventos = ["pointerdown", "keydown", "touchstart"] as const;
+
+  const correr = (conSonido: boolean) => {
+    if (hecho) return;
+    hecho = true;
+    limpiar();
+    accion(conSonido);
+  };
+
+  const alGesto = () => correr(true);
+  const reloj = window.setTimeout(() => correr(false), esperaMaxMs);
+
+  function limpiar() {
+    window.clearTimeout(reloj);
+    for (const e of eventos) window.removeEventListener(e, alGesto);
+  }
+
+  for (const e of eventos) window.addEventListener(e, alGesto, { once: true, passive: true });
+
+  return () => {
+    hecho = true;
+    limpiar();
+  };
+}
+
+/**
  * Cerveza sirviéndose, sintetizada con WebAudio: ruido filtrado que hace de
  * chorro y burbujas que van saliendo. Sin archivo: no hay nada que bajar, y en
  * la laptop de demostración —sin internet— suena igual.
  */
-export function servirCerveza(duracion = 2.2) {
+export function servirCerveza(duracion = 2.2): boolean {
   type ConWebkit = typeof window & { webkitAudioContext?: typeof AudioContext };
   const Ctx =
     typeof window === "undefined"
       ? undefined
       : window.AudioContext ?? (window as ConWebkit).webkitAudioContext;
-  if (!Ctx) return;
+  if (!Ctx) return false;
 
   const ctx = new Ctx();
+  // Si el navegador todavía no da permiso, el contexto nace suspendido: no se
+  // programa nada y quien llama sabe que hay que esperar un gesto.
+  if (ctx.state === "suspended") {
+    ctx.close().catch(() => {});
+    return false;
+  }
   const ahora = ctx.currentTime;
 
   // --- el chorro: ruido blanco pasado por un filtro que se va cerrando ---
@@ -107,4 +151,5 @@ export function servirCerveza(duracion = 2.2) {
 
   // El contexto se cierra solo al terminar: no queda uno abierto por visita.
   window.setTimeout(() => ctx.close().catch(() => {}), (duracion + 0.4) * 1000);
+  return true;
 }

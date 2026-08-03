@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { pistaPorton } from "@/lib/sonido";
+import { alPrimerGesto, pistaPorton } from "@/lib/sonido";
 
 /** Cuánto espera antes de abrir, y el respaldo si el audio no carga. */
 const RETARDO = 900;
@@ -24,6 +24,7 @@ export default function PuertasContenedor() {
 
     let abre: ReturnType<typeof setTimeout> | undefined;
     let cierra: ReturnType<typeof setTimeout> | undefined;
+    let cancelarGesto: (() => void) | undefined;
 
     /**
      * Las puertas y el sonido arrancan juntos y terminan juntos: la apertura
@@ -35,11 +36,23 @@ export default function PuertasContenedor() {
       const apertura = Math.max(1200, totalMs - RETARDO - 200);
       setDuracion(apertura);
       abre = setTimeout(() => {
-        setAbriendo(true);
-        // Si el navegador bloquea el audio sin gesto previo, se abre igual.
-        audio.play().catch(() => {});
+        const abrir = () => {
+          setAbriendo(true);
+          cierra = setTimeout(() => setFin(true), apertura + 300);
+        };
+        // Si el navegador deja sonar, se abre con el sonido. Si lo bloquea
+        // —una recarga, sin ningún clic previo—, se espera el primer gesto
+        // para que puerta y sonido sigan yendo juntos.
+        audio
+          .play()
+          .then(abrir)
+          .catch(() => {
+            cancelarGesto = alPrimerGesto((conSonido) => {
+              if (conSonido) audio.play().catch(() => {});
+              abrir();
+            });
+          });
       }, RETARDO);
-      cierra = setTimeout(() => setFin(true), RETARDO + apertura + 300);
     };
 
     const conMetadatos = () =>
@@ -54,6 +67,7 @@ export default function PuertasContenedor() {
       clearTimeout(abre);
       clearTimeout(cierra);
       clearTimeout(respaldo);
+      cancelarGesto?.();
       audio.pause();
       audio.currentTime = 0;
     };
