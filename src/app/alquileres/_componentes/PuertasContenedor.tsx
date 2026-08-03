@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-/** Mismos tiempos que el prototipo. */
+/** La pista del portón. El navegador lee el AAC del .mp4 sin problema. */
+const PISTA = "/puerta.mp4";
+
+/** Cuánto espera antes de abrir, y el respaldo si el audio no carga. */
 const RETARDO = 900;
 const DURACION = 2000;
 
@@ -14,22 +17,46 @@ const DURACION = 2000;
 export default function PuertasContenedor() {
   const [abriendo, setAbriendo] = useState(false);
   const [fin, setFin] = useState(false);
-  const sonido = useRef<HTMLAudioElement | null>(null);
+  /** Lo que tarda la apertura: se calza con lo que dura el sonido. */
+  const [duracion, setDuracion] = useState(DURACION);
 
   useEffect(() => {
-    sonido.current = new Audio("/puerta.mp3");
-    sonido.current.volume = 0.9;
+    const audio = new Audio(PISTA);
+    audio.volume = 0.9;
 
-    const abre = setTimeout(() => {
-      setAbriendo(true);
-      // Si el navegador bloquea el audio sin gesto previo, se abre igual.
-      sonido.current?.play().catch(() => {});
-    }, RETARDO);
-    const cierra = setTimeout(() => setFin(true), RETARDO + DURACION + 300);
+    let abre: ReturnType<typeof setTimeout> | undefined;
+    let cierra: ReturnType<typeof setTimeout> | undefined;
+
+    /**
+     * Las puertas y el sonido arrancan juntos y terminan juntos: la apertura
+     * dura lo que dura la pista menos el retardo del arranque. Antes eran dos
+     * tiempos fijos que no tenían nada que ver con el audio.
+     */
+    const programar = (totalMs: number) => {
+      if (abre) return;
+      const apertura = Math.max(1200, totalMs - RETARDO - 200);
+      setDuracion(apertura);
+      abre = setTimeout(() => {
+        setAbriendo(true);
+        // Si el navegador bloquea el audio sin gesto previo, se abre igual.
+        audio.play().catch(() => {});
+      }, RETARDO);
+      cierra = setTimeout(() => setFin(true), RETARDO + apertura + 300);
+    };
+
+    const conMetadatos = () =>
+      programar(Number.isFinite(audio.duration) ? audio.duration * 1000 : RETARDO + DURACION);
+
+    audio.addEventListener("loadedmetadata", conMetadatos, { once: true });
+    audio.addEventListener("error", () => programar(RETARDO + DURACION), { once: true });
+    // Si la pista tarda en responder, la intro no se queda esperándola.
+    const respaldo = setTimeout(() => programar(RETARDO + DURACION), 1200);
 
     return () => {
       clearTimeout(abre);
       clearTimeout(cierra);
+      clearTimeout(respaldo);
+      audio.pause();
     };
   }, []);
 
@@ -40,14 +67,14 @@ export default function PuertasContenedor() {
     backgroundSize: "100vw 100vh",
     backgroundRepeat: "no-repeat",
     filter: abriendo ? "brightness(1)" : "brightness(0.45)",
-    transition: `transform ${DURACION}ms cubic-bezier(0.55, 0, 0.25, 1), filter 700ms ease-out`,
+    transition: `transform ${duracion}ms cubic-bezier(0.55, 0, 0.25, 1), filter 700ms ease-out`,
     transformStyle: "preserve-3d",
     backfaceVisibility: "hidden",
     willChange: "transform, filter",
   };
 
   const sombra: React.CSSProperties = {
-    transition: `opacity ${DURACION}ms ease-out`,
+    transition: `opacity ${duracion}ms ease-out`,
     opacity: abriendo ? 1 : 0,
   };
 
