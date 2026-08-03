@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTema } from "@/components/tema";
 
 /**
  * Intro de la cervecería: un chopp que se llena, la espuma que sube y el
@@ -116,10 +117,14 @@ const TOPE = CUERPO.y + 22;
  * nítido en el televisor del salón igual que en una tablet.
  */
 function Chopp({ lleno }: { lleno: boolean }) {
+  const [tema] = useTema();
   const altoLiquido = lleno ? CUERPO.y + CUERPO.alto - TOPE : 0;
+  // De día el fondo es blanco y la espuma blanca desaparecía: se le pone un
+  // contorno tenue en vez de ensuciarle el color.
+  const bordeEspuma = tema === "dia" ? "#E4C078" : "transparent";
 
   return (
-    <svg viewBox="0 0 200 250" className="h-[200px] w-[160px] sm:h-[240px] sm:w-[192px]">
+    <svg viewBox="0 0 200 250" className="h-[240px] w-[192px] sm:h-[300px] sm:w-[240px]">
       <defs>
         <linearGradient id="splash-cerveza" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#E9A100" />
@@ -205,11 +210,13 @@ function Chopp({ lleno }: { lleno: boolean }) {
         <path
           d="M30 62c0-14 10-22 22-20 4-12 18-16 28-8 10-6 24-2 26 10 12 0 16 10 12 18-2 6-8 8-14 8H44c-8 0-14-4-14-8z"
           fill="#FFFBEB"
+          stroke={bordeEspuma}
+          strokeWidth="1.5"
         />
-        <circle cx="52" cy="40" r="9" fill="#FFFDF5" />
-        <circle cx="78" cy="34" r="11" fill="#FFFDF5" />
-        <circle cx="104" cy="38" r="9" fill="#FFFDF5" />
-        <circle cx="124" cy="46" r="7" fill="#FFFDF5" />
+        <circle cx="52" cy="40" r="9" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
+        <circle cx="78" cy="34" r="11" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
+        <circle cx="104" cy="38" r="9" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
+        <circle cx="124" cy="46" r="7" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
       </g>
 
       {/* el vidrio por encima de todo */}
