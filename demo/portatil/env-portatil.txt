@@ -1,0 +1,21 @@
+# Copiar este archivo como `.env` en la raíz del proyecto, en la laptop de la demo.
+#
+# Es la configuración para que el sistema corra solo, sin internet y sin bilbo:
+# la base es la que está instalada en la misma laptop.
+
+# La contraseña es la que pusiste al instalar PostgreSQL.
+DATABASE_URL="postgresql://postgres@localhost:5433/contenedores?connection_limit=5"
+
+# Firma de las sesiones. Con esta alcanza para la demo; para producción se genera
+# una nueva con: openssl rand -base64 32
+AUTH_SECRET="demo-contenedores-cambiar-en-produccion-0123456789abcdef"
+
+# La demo se sirve por HTTP plano: sin esto la cookie de sesión sale marcada como
+# `Secure`, el navegador la descarta y el login vuelve al login sin decir por qué.
+COOKIE_INSECURE=1
+
+# El botón "Debug" reporta a tickets.petroboxinc.com, que no va a estar sin
+# internet. Sin `TICKETS_API_KEY` el botón no aparece y el cliente no lo ve.
+# TICKETS_API=https://tickets.petroboxinc.com/api
+# TICKETS_API_KEY=
+# TICKETS_PROJECT=Contenedores

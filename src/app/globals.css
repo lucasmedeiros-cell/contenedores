@@ -465,8 +465,33 @@ select.campo {
 
 /* La pestaña que ya vio la intro no la vuelve a ver, y sin parpadeo:
    el atributo lo pone un script que corre antes del primer pintado. */
-html[data-splash="listo"] .splash-puertas {
+html[data-splash="listo"] .splash-puertas,
+html[data-splash-bar="listo"] .splash-bar {
   display: none;
+}
+
+/* Las burbujas del chopp de la intro del bar: suben, se agrandan un poco y se
+   deshacen contra la espuma. */
+@keyframes subir-burbuja {
+  0% {
+    transform: translateY(200px) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(58px) scale(1.15);
+    opacity: 0;
+  }
+}
+.splash-burbuja {
+  animation: subir-burbuja 2.1s ease-in infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash-burbuja {
+    animation: none;
+  }
 }
 
 /* --------------------------------------------------------------------------

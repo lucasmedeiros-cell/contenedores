@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSesion } from "@/lib/auth";
 import { cajaDelMenu, turnoAbierto } from "@cerveza/_lib/datos";
 import { BarraLateralCerveceria } from "@cerveza/_componentes/ShellCerveceria";
+import SplashCerveceria from "@cerveza/_componentes/SplashCerveceria";
 import DebugReporter from "@/components/DebugReporter";
 
 /**
@@ -20,6 +21,7 @@ export default async function LayoutCerveceria({ children }: { children: React.R
         caja={cajaDelMenu(turno)}
       />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">{children}</div>
+      <SplashCerveceria />
       {/* Igual que en el patio: sin key de Tickets, el botón no se muestra. */}
       {process.env.TICKETS_API_KEY && <DebugReporter surface="crm" />}
     </div>

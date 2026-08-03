@@ -1,0 +1,37 @@
+CARPETA PORTATIL — Contenedores
+================================
+
+Objetivo: copiar la carpeta a cualquier PC con Windows y arrancar con doble
+clic en iniciar.bat. No instala nada ni pide permisos de administrador.
+
+Falta bajar dos cosas UNA SOLA VEZ (con internet) y descomprimirlas acá:
+
+1) Node.js portatil
+   https://nodejs.org/dist/v20.18.1/node-v20.18.1-win-x64.zip
+   Descomprimir y renombrar la carpeta a:   demo\portatil\node
+   (adentro tiene que quedar node.exe y npm.cmd)
+
+2) PostgreSQL portatil (binarios, sin instalador)
+   https://www.enterprisedb.com/download-postgresql-binaries  -> Windows x86-64, version 16
+   Descomprimir; adentro viene una carpeta "pgsql". Dejarla como:
+   demo\portatil\pgsql
+   (adentro tiene que quedar pgsql\bin\pg_ctl.exe)
+
+Despues:
+
+   doble clic en iniciar.bat
+
+La primera vez tarda unos minutos: crea la base, instala dependencias y
+compila. Las siguientes arranca en segundos y abre el navegador solo.
+
+  Patio       http://localhost:3000/alquileres
+  Cerveceria  http://localhost:3001/cerveza
+  Usuario admin / clave 1234
+
+La base queda en demo\portatil\datos, dentro de la misma carpeta: si copiás
+la carpeta a otra PC, se lleva los datos con ella.
+
+Para cerrar todo: cerrar las dos ventanas negras.
+
+3) Copiar demo\portatil\env-portatil.txt a la raiz del proyecto como  .env
+   (el iniciar.bat lo necesita para saber donde esta la base)

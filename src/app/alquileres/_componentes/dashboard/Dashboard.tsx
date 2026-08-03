@@ -28,11 +28,13 @@ export default function Dashboard({
   const [kpi, setKpi] = useState<TipoKpi | null>(null);
 
   return (
-    <div className="animate-fade-in space-y-4">
+    /* El Inicio entra en una pantalla: la página no scrollea, y si algo no
+       cabe —pantallas bajas— scrollea el panel por dentro. */
+    <div className="animate-fade-in flex h-full min-h-0 flex-col gap-3">
       <TarjetasKpi metricas={metricas} onDetalle={setKpi} />
 
-      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-3">
-        <div className="xl:col-span-2">
+      <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 xl:grid-cols-3">
+        <div className="min-h-0 overflow-y-auto scrollbar-none xl:col-span-2">
           <EvolucionPagos metricas={metricas} />
         </div>
         <div className="flex flex-col xl:col-span-1">

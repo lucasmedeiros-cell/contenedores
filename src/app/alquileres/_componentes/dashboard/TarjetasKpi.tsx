@@ -85,7 +85,7 @@ function Tarjeta({
   );
 
   const clases =
-    "panel group relative overflow-hidden p-4 text-left transition-all duration-200 hover:border-[#FFC200]/45 active:scale-[0.99]";
+    "panel group relative overflow-hidden p-3 text-left transition-all duration-200 hover:border-[#FFC200]/45 active:scale-[0.99]";
 
   return href ? (
     <Link href={href} className={clases}>
@@ -112,7 +112,7 @@ export default function TarjetasKpi({
   const conArrendatario = m.conArrendatario || 1;
 
   return (
-    <div className="mb-6 grid grid-cols-1 gap-4 select-none sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid shrink-0 grid-cols-1 gap-3 select-none sm:grid-cols-2 xl:grid-cols-4">
       <Tarjeta
         etiqueta="Recaudación del Mes"
         valor={plata(m.recaudadoMes)}

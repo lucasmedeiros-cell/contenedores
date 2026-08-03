@@ -30,7 +30,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           renderizar en el cliente, y el aviso salía como error en cada carga.
         */}
         <Script id="tema-antes-de-pintar" strategy="beforeInteractive">
-          {"try{if(localStorage.getItem('patio_tema')==='dia')document.documentElement.classList.add('light-mode')}catch(e){}"}
+          {"try{if(localStorage.getItem('patio_tema')==='dia')document.documentElement.classList.add('light-mode');" +
+            "var k='contenedores_splash';" +
+            "if(sessionStorage.getItem(k)==='visto'){document.documentElement.dataset.splash='listo'}else{sessionStorage.setItem(k,'visto')};" +
+            // La del bar solo se lee: quien la marca es la propia intro, al
+            // montarse, así que entrar por el patio no se la come.
+            "if(sessionStorage.getItem('cerveceria_splash')==='visto'){document.documentElement.dataset.splashBar='listo'}}catch(e){}"}
         </Script>
       </head>
       <body className="min-h-dvh bg-[#09090b] text-zinc-100 antialiased">{children}</body>
