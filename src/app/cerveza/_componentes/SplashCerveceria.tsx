@@ -8,13 +8,11 @@ import { alPrimerGesto, servirCerveza } from "@/lib/sonido";
  * Intro de la cervecería: un chopp que se llena, la espuma que sube y el
  * cartel de la casa; después se levanta y deja la app.
  *
- * Se ve una sola vez por pestaña. Quién ya la vio se resuelve antes de pintar
- * —el script del layout raíz marca `data-splash-bar` en el documento y el CSS
- * la esconde—, así que en las cargas siguientes no llega a haber parpadeo.
- * Acá solo queda anotar que esta pestaña ya la vio.
+ * Se ve en cada carga de la página, no una sola vez por pestaña: recargando
+ * para mostrarla no aparecía, que es justo cuando uno la quiere ver. Un toque
+ * la saltea.
  */
 
-const CLAVE = "cerveceria_splash";
 /** El vaso tarda esto en llenarse; después se sostiene un momento. */
 const LLENADO = 1500;
 const ESPERA = 2400;
@@ -26,12 +24,6 @@ export default function SplashCerveceria() {
   const [fin, setFin] = useState(false);
 
   useEffect(() => {
-    try {
-      sessionStorage.setItem(CLAVE, "visto");
-    } catch {
-      // Sin storage la intro se repite; no es motivo para romper nada.
-    }
-
     // Quien pidió menos movimiento ve el cartel un instante y sigue.
     const corto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const espera = corto ? 500 : ESPERA;

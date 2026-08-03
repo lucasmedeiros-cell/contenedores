@@ -93,7 +93,9 @@ export default function PuertasContenedor() {
 
   return (
     <div
-      className="splash-puertas pointer-events-none fixed inset-0 z-[100] overflow-hidden"
+      className={`splash-puertas fixed inset-0 z-[100] overflow-hidden ${
+        abriendo ? "pointer-events-none" : ""
+      }`}
       style={{ perspective: "1700px", perspectiveOrigin: "center center" }}
     >
       <div
