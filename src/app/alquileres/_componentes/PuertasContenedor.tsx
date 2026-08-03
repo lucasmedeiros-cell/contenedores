@@ -36,22 +36,30 @@ export default function PuertasContenedor() {
       const apertura = Math.max(1200, totalMs - RETARDO - 200);
       setDuracion(apertura);
       abre = setTimeout(() => {
+        /**
+         * La animación no espera a nadie: arranca siempre en hora. Si el
+         * navegador dejó sonar, van juntos y listo. Si lo bloqueó —una recarga,
+         * sin ningún clic previo—, al primer gesto se rebobinan las puertas y
+         * se vuelven a abrir CON el sonido: es la única forma de que salgan a
+         * la par, porque antes de ese gesto no hay audio posible.
+         */
         const abrir = () => {
           setAbriendo(true);
-          cierra = setTimeout(() => setFin(true), apertura + 300);
+          clearTimeout(cierra);
+          cierra = setTimeout(() => setFin(true), apertura + 400);
         };
-        // Si el navegador deja sonar, se abre con el sonido. Si lo bloquea
-        // —una recarga, sin ningún clic previo—, se espera el primer gesto
-        // para que puerta y sonido sigan yendo juntos.
-        audio
-          .play()
-          .then(abrir)
-          .catch(() => {
-            cancelarGesto = alPrimerGesto((conSonido) => {
-              if (conSonido) audio.play().catch(() => {});
-              abrir();
-            });
-          });
+
+        abrir();
+        audio.play().catch(() => {
+          cancelarGesto = alPrimerGesto((conSonido) => {
+            if (!conSonido) return;
+            setAbriendo(false);
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+            // Un frame cerradas para que la transición vuelva a correr.
+            requestAnimationFrame(() => requestAnimationFrame(abrir));
+          }, 3000);
+        });
       }, RETARDO);
     };
 

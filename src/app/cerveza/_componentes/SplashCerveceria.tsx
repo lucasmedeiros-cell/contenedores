@@ -30,24 +30,34 @@ export default function SplashCerveceria() {
 
     let sale: ReturnType<typeof setTimeout>;
     let cierra: ReturnType<typeof setTimeout>;
+    let cancelarGesto = () => {};
 
     /** Llena el vaso y programa la salida de la intro. */
     const servir = (conSonido: boolean) => {
       setLleno(true);
       if (!corto && conSonido) servirCerveza(LLENADO / 1000 + 0.5);
+      clearTimeout(sale);
+      clearTimeout(cierra);
       sale = setTimeout(() => setSaliendo(true), espera);
       cierra = setTimeout(() => setFin(true), espera + SALIDA);
     };
 
-    // Entrando desde un clic —el menú del patio, un enlace— el navegador ya
-    // permite sonido y se sirve en el acto. Recargando la página no hay gesto
-    // previo y el audio nace mudo: ahí se espera el primero —clic, toque o
-    // tecla— para que el chorro suene junto con el llenado, y si no llega
-    // ninguno en dos segundos se sirve igual, en silencio.
-    let cancelarGesto = () => {};
+    /**
+     * El vaso se llena en hora, suene o no. Si el navegador calló el chorro
+     * —recarga, sin gesto previo—, al primer clic se vacía y se vuelve a
+     * servir con el sonido: así el chorro y el llenado salen juntos, que es de
+     * lo que se trata.
+     */
     const llena = setTimeout(() => {
-      if (corto || servirCerveza(LLENADO / 1000 + 0.5)) servir(false);
-      else cancelarGesto = alPrimerGesto(servir);
+      const sono = !corto && servirCerveza(LLENADO / 1000 + 0.5);
+      servir(false);
+      if (!sono && !corto) {
+        cancelarGesto = alPrimerGesto((conSonido) => {
+          if (!conSonido) return;
+          setLleno(false);
+          requestAnimationFrame(() => requestAnimationFrame(() => servir(true)));
+        }, 3000);
+      }
     }, 60);
 
     return () => {
