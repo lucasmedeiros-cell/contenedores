@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import Image from "next/image";
 import { Container, LogIn } from "lucide-react";
 import { ingresar, type EstadoIngreso } from "./acciones";
+import { prepararPorton } from "@/lib/sonido";
 
 export default function FormularioIngreso() {
   const [estado, accion, pendiente] = useActionState<EstadoIngreso, FormData>(ingresar, {});
@@ -44,7 +45,10 @@ export default function FormularioIngreso() {
             Ingresa tus credenciales para acceder al panel
           </p>
 
-          <form action={accion} className="space-y-4">
+          {/* El clic de este formulario es el único gesto del usuario antes de que
+              arranque la intro: se aprovecha para desbloquear el audio, que si no
+              el navegador lo calla con NotAllowedError. */}
+          <form action={accion} onSubmit={() => prepararPorton()} className="space-y-4">
             <label className="block">
               <span className="mb-1.5 block text-[11px] font-bold tracking-wider text-zinc-400 uppercase">
                 Usuario

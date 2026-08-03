@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTema } from "@/components/tema";
+import { servirCerveza } from "@/lib/sonido";
 
 /**
  * Intro de la cervecería: un chopp que se llena, la espuma que sube y el
@@ -35,7 +36,11 @@ export default function SplashCerveceria() {
     const corto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const espera = corto ? 500 : ESPERA;
 
-    const llena = setTimeout(() => setLleno(true), 60);
+    const llena = setTimeout(() => {
+      setLleno(true);
+      // El chorro suena mientras el vaso se llena, no antes ni después.
+      if (!corto) servirCerveza(LLENADO / 1000 + 0.5);
+    }, 60);
     const sale = setTimeout(() => setSaliendo(true), espera);
     const cierra = setTimeout(() => setFin(true), espera + SALIDA);
 
@@ -148,14 +153,15 @@ function Chopp({ lleno }: { lleno: boolean }) {
         </clipPath>
       </defs>
 
-      {/* asa */}
+      {/* Asa: arranca dentro del vidrio (x=128, no 134) para que no se vea el
+          corte entre el asa y el vaso, y va detrás del cuerpo. */}
       <path
-        d="M134 96h20a26 26 0 0 1 0 52h-20"
+        d="M128 104h18a25 25 0 0 1 0 50h-18"
         fill="none"
         stroke="#FFC200"
-        strokeOpacity=".45"
-        strokeWidth="9"
-        strokeLinecap="round"
+        strokeOpacity=".5"
+        strokeWidth="10"
+        strokeLinejoin="round"
       />
 
       <g clipPath="url(#splash-dentro)">
@@ -207,16 +213,37 @@ function Chopp({ lleno }: { lleno: boolean }) {
           transition: `opacity .5s ease-out ${LLENADO - 500}ms, transform .6s cubic-bezier(.34,1.56,.64,1) ${LLENADO - 550}ms`,
         }}
       >
-        <path
-          d="M30 62c0-14 10-22 22-20 4-12 18-16 28-8 10-6 24-2 26 10 12 0 16 10 12 18-2 6-8 8-14 8H44c-8 0-14-4-14-8z"
-          fill="#FFFBEB"
-          stroke={bordeEspuma}
-          strokeWidth="1.5"
-        />
-        <circle cx="52" cy="40" r="9" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
-        <circle cx="78" cy="34" r="11" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
-        <circle cx="104" cy="38" r="9" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
-        <circle cx="124" cy="46" r="7" fill="#FFFDF5" stroke={bordeEspuma} strokeWidth="1.5" />
+        {/* La espuma es una banda que cubre TODO el ancho del vaso —antes era
+            un contorno dibujado a mano que no llegaba al borde derecho y dejaba
+            ver el fondo negro— más el copete que asoma por encima del vidrio. */}
+        <g clipPath="url(#splash-dentro)">
+          <rect
+            x={CUERPO.x}
+            y={CUERPO.y - 4}
+            width={CUERPO.ancho}
+            height={TOPE - CUERPO.y + 12}
+            fill="#FFFBEB"
+            stroke={bordeEspuma}
+            strokeWidth="1.5"
+          />
+        </g>
+        {[
+          [46, 10],
+          [68, 12],
+          [92, 11],
+          [114, 10],
+          [130, 8],
+        ].map(([cx, r]) => (
+          <circle
+            key={cx}
+            cx={cx}
+            cy={CUERPO.y + 4}
+            r={r}
+            fill="#FFFDF5"
+            stroke={bordeEspuma}
+            strokeWidth="1.5"
+          />
+        ))}
       </g>
 
       {/* el vidrio por encima de todo */}

@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-/** La pista del portón. El navegador lee el AAC del .mp4 sin problema. */
-const PISTA = "/puerta.mp4";
+import { pistaPorton } from "@/lib/sonido";
 
 /** Cuánto espera antes de abrir, y el respaldo si el audio no carga. */
 const RETARDO = 900;
@@ -21,8 +19,8 @@ export default function PuertasContenedor() {
   const [duracion, setDuracion] = useState(DURACION);
 
   useEffect(() => {
-    const audio = new Audio(PISTA);
-    audio.volume = 0.9;
+    const audio = pistaPorton();
+    if (!audio) return;
 
     let abre: ReturnType<typeof setTimeout> | undefined;
     let cierra: ReturnType<typeof setTimeout> | undefined;
@@ -57,6 +55,7 @@ export default function PuertasContenedor() {
       clearTimeout(cierra);
       clearTimeout(respaldo);
       audio.pause();
+      audio.currentTime = 0;
     };
   }, []);
 
