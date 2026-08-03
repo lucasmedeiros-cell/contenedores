@@ -1,0 +1,55 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.env
+
+# Las otras carpetas de compilación de NEXT_DIST_DIR (ver next.config.ts)
+/.next-verify
+/.next-alquileres
+/.next-cerveceria
+
+# El volcado de la base: datos reales y hashes de contraseñas, no va al repo.
+# Se regenera con scripts/exportar-demo.sh (ver DEMO.md).
+demo/*.sql
+
+# La plantilla sí, aunque .env* esté ignorado más arriba.
+!.env.example

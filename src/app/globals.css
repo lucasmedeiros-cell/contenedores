@@ -1,0 +1,626 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Contenedores — sistema de diseño
+   Tema oscuro por defecto, acento ámbar #FFC200, superficies zinc.
+   ========================================================================== */
+
+@theme {
+  --color-marca: #ffc200;
+  --color-marca-suave: #ffdb66;
+  --color-marca-oscuro: #d99e00;
+
+  --color-lienzo: #09090b;
+  --color-panel: #131316;
+  --color-panel-alto: #18181c;
+  --color-linea: #27272a;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --ease-suave: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-rebote: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root {
+  color-scheme: dark;
+  --sombra-panel: 0 1px 0 0 rgb(255 255 255 / 0.04) inset,
+    0 12px 32px -12px rgb(0 0 0 / 0.6);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-lienzo);
+  color: #fafafa;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* Números tabulares en todo lo que sea plata o cantidades */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbars
+   -------------------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #3f3f46;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #52525b;
+  background-clip: content-box;
+}
+
+/* --------------------------------------------------------------------------
+   Componentes base
+   -------------------------------------------------------------------------- */
+
+@utility panel {
+  background-color: color-mix(in oklab, #18181b 90%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 1.5rem;
+  box-shadow: var(--sombra-panel);
+  backdrop-filter: blur(12px);
+}
+
+@utility campo {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.09);
+  background-color: rgb(255 255 255 / 0.03);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #fafafa;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background-color 0.18s;
+}
+
+.campo::placeholder {
+  color: #52525b;
+}
+.campo:focus {
+  border-color: color-mix(in oklab, var(--color-marca) 55%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-marca) 15%, transparent);
+  background-color: rgb(255 255 255 / 0.05);
+}
+.campo:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+select.campo {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem;
+}
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform 0.12s var(--ease-suave), filter 0.18s, background-color 0.18s,
+    border-color 0.18s, opacity 0.18s;
+  cursor: pointer;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@utility btn-marca {
+  background-color: var(--color-marca);
+  color: #09090b;
+}
+.btn-marca:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+@utility btn-fantasma {
+  background-color: rgb(255 255 255 / 0.05);
+  color: #e4e4e7;
+  border: 1px solid rgb(255 255 255 / 0.09);
+}
+.btn-fantasma:hover:not(:disabled) {
+  background-color: rgb(255 255 255 / 0.1);
+}
+
+@utility btn-peligro {
+  background-color: rgb(244 63 94 / 0.12);
+  color: #fb7185;
+  border: 1px solid rgb(244 63 94 / 0.3);
+}
+.btn-peligro:hover:not(:disabled) {
+  background-color: rgb(244 63 94 / 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   Animaciones
+   -------------------------------------------------------------------------- */
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes escalar-entrada {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes deslizar-abajo {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes latido-alerta {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(251 191 36 / 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgb(251 191 36 / 0);
+  }
+}
+
+@keyframes brillo-barrido {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes humo {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  25% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-14px, -46px) scale(1.9);
+  }
+}
+
+@keyframes parpadeo-luz {
+  0%,
+  100% {
+    opacity: 0.92;
+  }
+  45% {
+    opacity: 0.78;
+  }
+  70% {
+    opacity: 1;
+  }
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* El anillo de cumplimiento se dibuja solo al aparecer: arranca vacío y el
+   fotograma final es el valor que ya tiene el elemento. */
+@keyframes dibujar-anillo {
+  from {
+    stroke-dashoffset: var(--vuelta);
+  }
+}
+
+@keyframes latido-anillo {
+  0% {
+    opacity: 0.75;
+    stroke-width: 2;
+  }
+  70% {
+    opacity: 0;
+    stroke-width: 8;
+  }
+  100% {
+    opacity: 0;
+    stroke-width: 8;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Modo Día — el prototipo alterna el tema poniendo la clase `light-mode` en el
+   documento, y estas reglas dan vuelta las superficies oscuras.
+   -------------------------------------------------------------------------- */
+
+.light-mode {
+  color-scheme: light;
+  color: #09090b !important;
+  background-color: #f4f4f5 !important;
+}
+.light-mode body {
+  color: #09090b !important;
+  background-color: #f4f4f5 !important;
+}
+
+/* Las superficies del sistema —`panel`, `campo`, `btn-fantasma`— son `@utility`
+   propias con el color adentro, no clases de Tailwind, así que dar vuelta
+   `bg-zinc-900` y compañía no las tocaba: el tema quedaba a medias, con los
+   paneles oscuros sobre fondo claro. Van primero, que es lo que más se ve. */
+.light-mode .panel {
+  background-color: #fff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -16px rgb(0 0 0 / 0.25) !important;
+}
+.light-mode .campo {
+  color: #09090b !important;
+  background-color: #fff !important;
+  border-color: #d4d4d8 !important;
+}
+.light-mode .campo::placeholder {
+  color: #a1a1aa !important;
+}
+.light-mode .btn-fantasma {
+  color: #27272a !important;
+  background-color: #f4f4f5 !important;
+  border-color: #e4e4e7 !important;
+}
+.light-mode .btn-fantasma:hover:not(:disabled) {
+  background-color: #e4e4e7 !important;
+}
+
+/* Superficies planas */
+.light-mode .bg-black,
+.light-mode .bg-zinc-950,
+.light-mode .bg-zinc-900,
+.light-mode .bg-zinc-900\/85,
+.light-mode .bg-zinc-900\/90,
+.light-mode .bg-zinc-950\/90,
+.light-mode .bg-zinc-950\/92,
+.light-mode .bg-zinc-950\/95,
+.light-mode .bg-zinc-950\/80,
+.light-mode .bg-black\/85,
+.light-mode .bg-black\/80,
+.light-mode .bg-black\/75,
+.light-mode .bg-black\/70,
+.light-mode .bg-black\/65,
+.light-mode .bg-black\/60,
+.light-mode .bg-black\/55,
+.light-mode .bg-black\/50,
+.light-mode .bg-black\/40 {
+  background-color: #fff !important;
+}
+.light-mode .bg-zinc-800,
+.light-mode .bg-zinc-800\/80,
+.light-mode .bg-zinc-800\/50,
+.light-mode .bg-zinc-700,
+.light-mode .bg-zinc-900\/50,
+.light-mode .bg-zinc-900\/40,
+.light-mode .bg-white\/3,
+.light-mode .bg-white\/5,
+.light-mode .bg-white\/6,
+.light-mode .bg-white\/8,
+.light-mode .bg-white\/10,
+.light-mode .bg-white\/\[\.03\],
+.light-mode .bg-white\/\[\.06\],
+.light-mode .bg-white\/20 {
+  background-color: #f4f4f5 !important;
+}
+
+/* La barra de la tarjeta KPI sin color propio: en oscuro es blanca translúcida
+   y sobre panel blanco desaparecería. */
+.light-mode .bg-white\/70 {
+  background-color: #a1a1aa !important;
+}
+
+/* Texto */
+.light-mode .text-white,
+.light-mode .text-zinc-100,
+.light-mode .text-zinc-200 {
+  color: #09090b !important;
+}
+.light-mode .text-zinc-300,
+.light-mode .text-zinc-400 {
+  color: #52525b !important;
+}
+.light-mode .text-zinc-500,
+.light-mode .text-zinc-600 {
+  color: #71717a !important;
+}
+.light-mode .text-\[\#FFC200\] {
+  color: #d97706 !important;
+  font-weight: 800 !important;
+}
+.light-mode .bg-\[\#FFC200\],
+.light-mode button.bg-\[\#FFC200\] {
+  color: #000 !important;
+  background-color: #ffc200 !important;
+}
+.light-mode .text-emerald-400 {
+  color: #059669 !important;
+  font-weight: 700 !important;
+}
+.light-mode .text-amber-400,
+.light-mode .text-amber-300 {
+  color: #d97706 !important;
+  font-weight: 700 !important;
+}
+
+/* Bordes */
+.light-mode .border-white\/5,
+.light-mode .border-white\/8,
+.light-mode .border-white\/10,
+.light-mode .border-white\/12,
+.light-mode .border-white\/15,
+.light-mode .border-white\/20,
+.light-mode .border-white\/25,
+.light-mode .border-white\/30,
+.light-mode .border-zinc-800,
+.light-mode .border-zinc-700 {
+  border-color: #e4e4e7 !important;
+}
+/* `divide-*` pinta el borde de los hijos, no del contenedor. */
+.light-mode .divide-white\/5 > * + *,
+.light-mode .divide-white\/10 > * + * {
+  border-color: #e4e4e7 !important;
+}
+
+/* Los velos de los diálogos y de los cajones siguen siendo oscuros: es lo que
+   separa lo de adelante de la pantalla, y claro sobre claro no se distinguiría.
+   Van por `.inset-0` —la capa a pantalla completa— y no por `.fixed`, porque
+   varios son `absolute` dentro de un contenedor fijo y se blanqueaban enteros,
+   tapando la pantalla: el menú móvil del bar quedaba sobre un rectángulo
+   blanco opaco. Esta regla es más específica que las de arriba, así que gana. */
+.light-mode .inset-0.bg-black\/85,
+.light-mode .inset-0.bg-black\/80,
+.light-mode .inset-0.bg-black\/75,
+.light-mode .inset-0.bg-black\/70,
+.light-mode .inset-0.bg-black\/60,
+.light-mode .inset-0.bg-black\/55,
+.light-mode .inset-0.bg-black\/50,
+.light-mode .inset-0.bg-black\/40 {
+  background-color: #00000073 !important;
+}
+/* El botón de cobrar del POS: en oscuro es negro con borde ámbar, y en claro
+   ese negro se vuelve blanco —queda un botón lavado justo en la acción más
+   importante de la pantalla—. En modo día va relleno. */
+.light-mode .cta-venta {
+  background-color: #ffc200 !important;
+  color: #000 !important;
+  box-shadow: 0 10px 24px -12px rgb(255 194 0 / 0.9) !important;
+}
+.light-mode .cta-venta:disabled {
+  background-color: #f4f4f5 !important;
+  color: #a1a1aa !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: none !important;
+}
+
+.light-mode .recharts-default-tooltip {
+  color: #09090b !important;
+  background-color: #fff !important;
+  border: 1px solid #e4e4e7 !important;
+}
+.light-mode ::-webkit-scrollbar-thumb {
+  background-color: #d4d4d8 !important;
+}
+
+
+/* La pestaña que ya vio la intro no la vuelve a ver, y sin parpadeo:
+   el atributo lo pone un script que corre antes del primer pintado. */
+html[data-splash="listo"] .splash-puertas {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Plano isométrico
+   -------------------------------------------------------------------------- */
+
+.modulo .modulo-cuerpo {
+  transition: transform 0.26s var(--ease-rebote), filter 0.26s;
+}
+.modulo:hover .modulo-cuerpo {
+  transform: translateY(-9px);
+  filter: brightness(1.16) drop-shadow(0 10px 14px rgb(0 0 0 / 0.55));
+}
+.modulo[data-seleccionado] .modulo-cuerpo {
+  transform: translateY(-6px);
+  filter: brightness(1.1) drop-shadow(0 0 12px rgb(255 194 0 / 0.4));
+}
+
+.anim-aparecer {
+  animation: aparecer 0.45s var(--ease-suave) both;
+}
+.anim-escalar {
+  animation: escalar-entrada 0.32s var(--ease-rebote) both;
+}
+.anim-hoja {
+  animation: deslizar-abajo 0.34s var(--ease-suave) both;
+}
+.anim-alerta {
+  animation: latido-alerta 2.2s ease-out infinite;
+}
+.anim-flotar {
+  animation: flotar 3.5s ease-in-out infinite;
+}
+.anim-girar {
+  animation: girar 0.9s linear infinite;
+}
+
+/* Retrasos escalonados para listas y grillas */
+.escalonar > * {
+  animation: aparecer 0.5s var(--ease-suave) both;
+}
+.escalonar > *:nth-child(1) { animation-delay: 0.02s; }
+.escalonar > *:nth-child(2) { animation-delay: 0.06s; }
+.escalonar > *:nth-child(3) { animation-delay: 0.1s; }
+.escalonar > *:nth-child(4) { animation-delay: 0.14s; }
+.escalonar > *:nth-child(5) { animation-delay: 0.18s; }
+.escalonar > *:nth-child(6) { animation-delay: 0.22s; }
+.escalonar > *:nth-child(7) { animation-delay: 0.26s; }
+.escalonar > *:nth-child(8) { animation-delay: 0.3s; }
+.escalonar > *:nth-child(9) { animation-delay: 0.34s; }
+.escalonar > *:nth-child(10) { animation-delay: 0.38s; }
+.escalonar > *:nth-child(n + 11) { animation-delay: 0.42s; }
+
+/* Esqueleto de carga */
+.esqueleto {
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.04) 25%,
+    rgb(255 255 255 / 0.09) 50%,
+    rgb(255 255 255 / 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: brillo-barrido 1.4s linear infinite;
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Impresión de comprobantes y tickets
+   -------------------------------------------------------------------------- */
+
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .no-imprimir {
+    display: none !important;
+  }
+  .solo-imprimir {
+    display: block !important;
+  }
+
+  /* El comprobante vive dentro de un diálogo: un recuadro centrado, con alto
+     máximo y su propio scroll, dentro de una capa fija. Al imprimir salía el
+     diálogo entero —título y equis incluidos—, corrido al medio de la hoja y
+     cortado donde terminaba el scroll. Acá se apaga todo lo demás y se desarma
+     el diálogo para que el recibo ocupe la hoja. */
+  body {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .area-impresion,
+  .area-impresion * {
+    visibility: visible;
+  }
+
+  /* Ni recorte ni contexto propio: una animación, un `transform` o un
+     `backdrop-filter` en un ancestro vuelven a atrapar al recibo aunque esté
+     posicionado como fijo. */
+  .modal-capa,
+  .modal-panel,
+  .modal-cuerpo {
+    animation: none !important;
+    transform: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  .area-impresion {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #fff !important;
+    color: #000 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  .area-impresion * {
+    color: #000 !important;
+    border-color: #a1a1aa !important;
+    background: transparent !important;
+  }
+}
+
+.solo-imprimir {
+  display: none;
+}

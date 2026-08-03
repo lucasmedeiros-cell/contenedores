@@ -1,0 +1,581 @@
+[
+  {
+    "id": "puesto-01",
+    "numero": "Puesto 01",
+    "zona": "Acceso Principal",
+    "tamanoM2": 24,
+    "precioBase": 450000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua",
+      "Gas Natural",
+      "Luz Trifásica",
+      "Extracción"
+    ],
+    "posicionMap": {
+      "x": 40,
+      "y": 70
+    },
+    "arrendatario": {
+      "id": "arr-01",
+      "nombre": "Carlos Mendoza",
+      "negocio": "Tacos & Burritos del Sol",
+      "rubro": "Comida Mexicana",
+      "telefono": "+54 9 11 4589-1234",
+      "email": "carlos.tacos@gmail.com",
+      "fechaInicio": "2026-01-10",
+      "proximoVencimiento": "2026-08-10",
+      "montoAcordado": 480000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-01",
+        "fecha": "2026-07-05",
+        "monto": 480000,
+        "periodicidad": "mensual",
+        "metodoPago": "Transferencia",
+        "comprobante": "TRF-982341",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-02",
+    "numero": "Puesto 02",
+    "zona": "Acceso Principal",
+    "tamanoM2": 20,
+    "precioBase": 420000,
+    "periodicidad": "mensual",
+    "estado": "pendiente",
+    "servicios": [
+      "Agua",
+      "Luz Monofásica"
+    ],
+    "posicionMap": {
+      "x": 210,
+      "y": 70
+    },
+    "arrendatario": {
+      "id": "arr-02",
+      "nombre": "Lucía Fernández",
+      "negocio": "Burger Smash Club",
+      "rubro": "Hamburguesas",
+      "telefono": "+54 9 11 5612-8890",
+      "email": "lucia.burgers@hotmail.com",
+      "fechaInicio": "2026-02-01",
+      "proximoVencimiento": "2026-07-01",
+      "montoAcordado": 440000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-02-old",
+        "fecha": "2026-06-02",
+        "monto": 440000,
+        "periodicidad": "mensual",
+        "metodoPago": "MercadoPago / QR",
+        "comprobante": "MP-772391",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Junio 2026"
+      },
+      {
+        "id": "pag-02-p",
+        "fecha": "2026-07-01",
+        "monto": 440000,
+        "periodicidad": "mensual",
+        "metodoPago": "Transferencia",
+        "comprobante": "PEND-002",
+        "estado": "Pendiente",
+        "concepto": "Alquiler Julio 2026 (En Mora)"
+      }
+    ]
+  },
+  {
+    "id": "puesto-03",
+    "numero": "Puesto 03",
+    "zona": "Zona Central",
+    "tamanoM2": 18,
+    "precioBase": 380000,
+    "periodicidad": "mensual",
+    "estado": "libre",
+    "servicios": [
+      "Agua",
+      "Extracción"
+    ],
+    "posicionMap": {
+      "x": 380,
+      "y": 70
+    },
+    "arrendatario": null,
+    "historialPagos": []
+  },
+  {
+    "id": "puesto-04",
+    "numero": "Puesto 04",
+    "zona": "Zona Central",
+    "tamanoM2": 22,
+    "precioBase": 460000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua",
+      "Gas Natural",
+      "Luz Trifásica"
+    ],
+    "posicionMap": {
+      "x": 550,
+      "y": 70
+    },
+    "arrendatario": {
+      "id": "arr-04",
+      "nombre": "Roberto Gómez",
+      "negocio": "Pizzería Napoletana Don Vito",
+      "rubro": "Pizzas & Pastas",
+      "telefono": "+54 9 11 3322-1100",
+      "email": "donvito.pizza@gmail.com",
+      "fechaInicio": "2025-11-15",
+      "proximoVencimiento": "2026-08-15",
+      "montoAcordado": 480000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-04",
+        "fecha": "2026-07-03",
+        "monto": 480000,
+        "periodicidad": "mensual",
+        "metodoPago": "Efectivo",
+        "comprobante": "EFC-109282",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-05",
+    "numero": "Puesto 05",
+    "zona": "Paso Peatonal",
+    "tamanoM2": 16,
+    "precioBase": 350000,
+    "periodicidad": "mensual",
+    "estado": "pendiente",
+    "servicios": [
+      "Luz Monofásica"
+    ],
+    "posicionMap": {
+      "x": 40,
+      "y": 190
+    },
+    "arrendatario": {
+      "id": "arr-05",
+      "nombre": "Sofía Rossi",
+      "negocio": "Gelato & Waffles Artesanales",
+      "rubro": "Heladería / Postres",
+      "telefono": "+54 9 11 8877-6655",
+      "email": "sofia.gelato@gmail.com",
+      "fechaInicio": "2026-03-10",
+      "proximoVencimiento": "2026-07-10",
+      "montoAcordado": 360000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-05-p",
+        "fecha": "2026-07-10",
+        "monto": 360000,
+        "periodicidad": "mensual",
+        "metodoPago": "Efectivo",
+        "comprobante": "PEND-005",
+        "estado": "Pendiente",
+        "concepto": "Alquiler Julio 2026 (Pendiente)"
+      }
+    ]
+  },
+  {
+    "id": "puesto-06",
+    "numero": "Puesto 06",
+    "zona": "Paso Peatonal",
+    "tamanoM2": 25,
+    "precioBase": 500000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua",
+      "Luz Trifásica",
+      "Extractor Industrial"
+    ],
+    "posicionMap": {
+      "x": 550,
+      "y": 190
+    },
+    "arrendatario": {
+      "id": "arr-06",
+      "nombre": "Mateo Benítez",
+      "negocio": "Sushi & Wok Bar Nikkei",
+      "rubro": "Comida Asiática",
+      "telefono": "+54 9 11 2233-4455",
+      "email": "mateo.sushi@nikkei.com",
+      "fechaInicio": "2025-10-01",
+      "proximoVencimiento": "2026-08-01",
+      "montoAcordado": 520000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-06",
+        "fecha": "2026-07-01",
+        "monto": 520000,
+        "periodicidad": "mensual",
+        "metodoPago": "Transferencia",
+        "comprobante": "TRF-110928",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-07",
+    "numero": "Puesto 07",
+    "zona": "Terraza",
+    "tamanoM2": 30,
+    "precioBase": 600000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua",
+      "Luz Trifásica",
+      "Barra Exterior",
+      "Extractor"
+    ],
+    "posicionMap": {
+      "x": 210,
+      "y": 310
+    },
+    "arrendatario": {
+      "id": "arr-07",
+      "nombre": "Valeria Soria",
+      "negocio": "Cervecería Artesanal & Taphouse",
+      "rubro": "Cervecería / Bar",
+      "telefono": "+54 9 11 9988-7766",
+      "email": "valeria.craftbeer@gmail.com",
+      "fechaInicio": "2025-09-01",
+      "proximoVencimiento": "2026-08-01",
+      "montoAcordado": 620000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-07",
+        "fecha": "2026-07-02",
+        "monto": 620000,
+        "periodicidad": "mensual",
+        "metodoPago": "MercadoPago / QR",
+        "comprobante": "MP-998123",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-08",
+    "numero": "Puesto 08",
+    "zona": "Terraza",
+    "tamanoM2": 20,
+    "precioBase": 420000,
+    "periodicidad": "mensual",
+    "estado": "libre",
+    "servicios": [
+      "Agua",
+      "Luz Monofásica"
+    ],
+    "posicionMap": {
+      "x": 380,
+      "y": 310
+    },
+    "arrendatario": null,
+    "historialPagos": []
+  },
+  {
+    "id": "puesto-09",
+    "numero": "Puesto 09",
+    "zona": "Patio de Luces",
+    "tamanoM2": 15,
+    "precioBase": 320000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Luz Monofásica"
+    ],
+    "posicionMap": {
+      "x": 550,
+      "y": 310
+    },
+    "arrendatario": {
+      "id": "arr-09",
+      "nombre": "Camila Duarte",
+      "negocio": "Specialty Coffee & Bakery",
+      "rubro": "Cafetería",
+      "telefono": "+54 9 11 1122-3344",
+      "email": "camila.coffee@gmail.com",
+      "fechaInicio": "2026-04-01",
+      "proximoVencimiento": "2026-08-01",
+      "montoAcordado": 340000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-09",
+        "fecha": "2026-07-04",
+        "monto": 340000,
+        "periodicidad": "mensual",
+        "metodoPago": "Transferencia",
+        "comprobante": "TRF-554433",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-10",
+    "numero": "Puesto 10",
+    "zona": "Patio de Luces",
+    "tamanoM2": 18,
+    "precioBase": 390000,
+    "periodicidad": "mensual",
+    "estado": "libre",
+    "servicios": [
+      "Agua",
+      "Luz Monofásica"
+    ],
+    "posicionMap": {
+      "x": 40,
+      "y": 430
+    },
+    "arrendatario": null,
+    "historialPagos": []
+  },
+  {
+    "id": "puesto-11",
+    "numero": "Puesto 11",
+    "zona": "Módulo Gastronómico Sur",
+    "tamanoM2": 28,
+    "precioBase": 550000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua",
+      "Gas Natural",
+      "Luz Trifásica",
+      "Extracción"
+    ],
+    "posicionMap": {
+      "x": 210,
+      "y": 430
+    },
+    "arrendatario": {
+      "id": "arr-11",
+      "nombre": "Mariano Silva",
+      "negocio": "Parrilla Criolla & Ahumados",
+      "rubro": "Parrilla / Carnes",
+      "telefono": "+54 9 11 7766-5544",
+      "email": "mariano.parrilla@gmail.com",
+      "fechaInicio": "2025-12-01",
+      "proximoVencimiento": "2026-08-01",
+      "montoAcordado": 580000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-11",
+        "fecha": "2026-07-02",
+        "monto": 580000,
+        "periodicidad": "mensual",
+        "metodoPago": "Transferencia",
+        "comprobante": "TRF-[#FFC200]",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-12",
+    "numero": "Puesto 12",
+    "zona": "Módulo Gastronómico Sur",
+    "tamanoM2": 22,
+    "precioBase": 440000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua",
+      "Luz Trifásica",
+      "Extractor"
+    ],
+    "posicionMap": {
+      "x": 380,
+      "y": 430
+    },
+    "arrendatario": {
+      "id": "arr-12",
+      "nombre": "Nadia López",
+      "negocio": "Arepas & Sabores Caribeños",
+      "rubro": "Comida Latina",
+      "telefono": "+54 9 11 4455-6677",
+      "email": "nadia.arepas@gmail.com",
+      "fechaInicio": "2026-02-15",
+      "proximoVencimiento": "2026-08-15",
+      "montoAcordado": 450000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-12",
+        "fecha": "2026-07-06",
+        "monto": 450000,
+        "periodicidad": "mensual",
+        "metodoPago": "MercadoPago / QR",
+        "comprobante": "MP-112233",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-13",
+    "numero": "Puesto 13",
+    "zona": "Terraza Peatonal",
+    "tamanoM2": 18,
+    "precioBase": 400000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua Corriente",
+      "Luz Comercial",
+      "Extractor Industrial"
+    ],
+    "posicionMap": {
+      "x": 40,
+      "y": 550
+    },
+    "descripcion": "Local de empanadas artesanales con horno de barro.",
+    "arrendatario": {
+      "id": "arr-13",
+      "nombre": "Rosa Giménez",
+      "negocio": "Empanadas Doña Rosa",
+      "rubro": "Empanadas y Pastelería Salada",
+      "telefono": "+54 9 11 4771-3355",
+      "email": "rosa.empanadas@gmail.com",
+      "fechaInicio": "2026-01-15",
+      "proximoVencimiento": "2026-08-15",
+      "montoAcordado": 410000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-13",
+        "fecha": "2026-07-06",
+        "monto": 410000,
+        "periodicidad": "mensual",
+        "metodoPago": "Transferencia",
+        "comprobante": "TRF-771335",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-14",
+    "numero": "Puesto 14",
+    "zona": "Paso Central",
+    "tamanoM2": 16,
+    "precioBase": 380000,
+    "periodicidad": "mensual",
+    "estado": "pendiente",
+    "servicios": [
+      "Agua Corriente",
+      "Luz Comercial"
+    ],
+    "posicionMap": {
+      "x": 210,
+      "y": 550
+    },
+    "descripcion": "Cafetería de especialidad con barra de granos.",
+    "arrendatario": {
+      "id": "arr-14",
+      "nombre": "Martín Ríos",
+      "negocio": "Café de la Esquina",
+      "rubro": "Café de Especialidad",
+      "telefono": "+54 9 11 5223-7788",
+      "email": "martin.cafe@hotmail.com",
+      "fechaInicio": "2026-02-10",
+      "proximoVencimiento": "2026-07-10",
+      "montoAcordado": 390000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-14-p",
+        "fecha": "2026-07-10",
+        "monto": 390000,
+        "periodicidad": "mensual",
+        "metodoPago": "Efectivo",
+        "comprobante": "PEND-014",
+        "estado": "Pendiente",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-15",
+    "numero": "Puesto 15",
+    "zona": "Zona Principal (Frente)",
+    "tamanoM2": 22,
+    "precioBase": 500000,
+    "periodicidad": "mensual",
+    "estado": "ocupado",
+    "servicios": [
+      "Agua Corriente",
+      "Luz Trifásica",
+      "Cámara Fría de Apoyo"
+    ],
+    "posicionMap": {
+      "x": 380,
+      "y": 550
+    },
+    "descripcion": "Heladería artesanal con vitrina de 24 gustos.",
+    "arrendatario": {
+      "id": "arr-15",
+      "nombre": "Valentina Cruz",
+      "negocio": "Heladería Polar",
+      "rubro": "Helados Artesanales",
+      "telefono": "+54 9 11 6390-2244",
+      "email": "valen.polar@gmail.com",
+      "fechaInicio": "2026-01-05",
+      "proximoVencimiento": "2026-08-05",
+      "montoAcordado": 530000
+    },
+    "historialPagos": [
+      {
+        "id": "pag-15",
+        "fecha": "2026-07-04",
+        "monto": 530000,
+        "periodicidad": "mensual",
+        "metodoPago": "MercadoPago / QR",
+        "comprobante": "MP-639022",
+        "estado": "Cobrado",
+        "concepto": "Alquiler Julio 2026"
+      }
+    ]
+  },
+  {
+    "id": "puesto-16",
+    "numero": "Puesto 16",
+    "zona": "Planta Alta / Mezzanine",
+    "tamanoM2": 20,
+    "precioBase": 420000,
+    "periodicidad": "mensual",
+    "estado": "libre",
+    "servicios": [
+      "Agua Corriente",
+      "Luz Comercial"
+    ],
+    "posicionMap": {
+      "x": 550,
+      "y": 550
+    },
+    "descripcion": "Espacio disponible en mezzanine con vista al patio.",
+    "arrendatario": null,
+    "historialPagos": []
+  }
+]

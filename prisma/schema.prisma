@@ -1,0 +1,375 @@
+// Contenedores — Sistema de gestión del patio de comidas
+// El modelo sigue al prototipo PatioAdmin v13: un puesto tiene a lo sumo un
+// arrendatario y su propio historial de pagos, sin tabla de contratos.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Accesos
+// ---------------------------------------------------------------------------
+
+enum Rol {
+  ADMIN
+  OPERADOR
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  nombre       String
+  passwordHash String
+  rol          Rol      @default(ADMIN)
+  activo       Boolean  @default(true)
+  creadoEn     DateTime @default(now())
+  editadoEn    DateTime @updatedAt
+
+  pagos Pago[]
+
+  @@map("usuarios")
+}
+
+// ---------------------------------------------------------------------------
+// El patio
+// ---------------------------------------------------------------------------
+
+/// Los tres estados que muestra el prototipo. `PENDIENTE` es un puesto ocupado
+/// que además tiene el alquiler sin cobrar.
+enum EstadoPuesto {
+  LIBRE
+  OCUPADO
+  PENDIENTE
+}
+
+enum Periodicidad {
+  DIARIO
+  SEMANAL
+  MENSUAL
+}
+
+/// Zona del patio. En el prototipo es solo un texto dentro del puesto; acá es
+/// una tabla para poder filtrar y para dibujar el suelo del plano isométrico.
+model Zona {
+  id       String  @id @default(cuid())
+  nombre   String  @unique
+  /// Textura del suelo en el plano: deck | cemento | cesped | adoquin
+  textura  String  @default("cemento")
+  gridX    Int     @default(0)
+  gridY    Int     @default(0)
+  gridW    Int     @default(6)
+  gridH    Int     @default(4)
+  cubierta Boolean @default(false)
+  orden    Int     @default(0)
+
+  puestos Puesto[]
+
+  @@map("zonas")
+}
+
+model Puesto {
+  id           String       @id @default(cuid())
+  numero       String       @unique
+  zonaId       String
+  zona         Zona         @relation(fields: [zonaId], references: [id])
+  tamanoM2     Float        @default(20)
+  precioBase   Decimal      @default(0) @db.Decimal(12, 2)
+  periodicidad Periodicidad @default(MENSUAL)
+  estado       EstadoPuesto @default(LIBRE)
+  servicios    String[]     @default([])
+  descripcion  String?
+
+  // --- Posición en el plano ---
+  /// Coordenadas del prototipo, en píxeles sobre el lienzo del mapa.
+  posX       Int     @default(40)
+  posY       Int     @default(70)
+  /// Geometría del plano isométrico (celdas de 2 m).
+  gridX      Int     @default(0)
+  gridY      Int     @default(0)
+  ancho      Int     @default(3)
+  largo      Int     @default(1)
+  alto       Int     @default(1)
+  rotacion   Int     @default(0)
+  colorBase  String  @default("#e2711d")
+  tipo       String  @default("contenedor")
+  tieneToldo Boolean @default(true)
+  icono      String?
+
+  creadoEn  DateTime @default(now())
+  editadoEn DateTime @updatedAt
+
+  /// Un puesto tiene a lo sumo un arrendatario, como en el prototipo.
+  arrendatario Arrendatario?
+  pagos        Pago[]
+
+  @@index([zonaId])
+  @@map("puestos")
+}
+
+model Arrendatario {
+  id                 String   @id @default(cuid())
+  puestoId           String   @unique
+  puesto             Puesto   @relation(fields: [puestoId], references: [id], onDelete: Cascade)
+  /// Nombre comercial del puesto
+  negocio            String
+  rubro              String
+  /// Nombre completo del responsable
+  nombre             String
+  telefono           String?
+  email              String?
+  fechaInicio        DateTime
+  proximoVencimiento DateTime
+  montoAcordado      Decimal  @db.Decimal(12, 2)
+  notas              String?
+  creadoEn           DateTime @default(now())
+  editadoEn          DateTime @updatedAt
+
+  @@index([nombre])
+  @@map("arrendatarios")
+}
+
+enum EstadoPago {
+  COBRADO
+  PENDIENTE
+}
+
+model Pago {
+  id            String       @id @default(cuid())
+  puestoId      String
+  puesto        Puesto       @relation(fields: [puestoId], references: [id], onDelete: Cascade)
+  fecha         DateTime
+  monto         Decimal      @db.Decimal(12, 2)
+  periodicidad  Periodicidad @default(MENSUAL)
+  /// Texto libre, como en el prototipo: "Efectivo", "Transferencia", "MercadoPago / QR"
+  metodoPago    String
+  /// Nº de operación o de comprobante
+  comprobante   String?
+  estado        EstadoPago   @default(COBRADO)
+  /// "Alquiler Julio 2026"
+  concepto      String
+  notas         String?
+  registradoPor String?
+  usuario       Usuario?     @relation(fields: [registradoPor], references: [id])
+  creadoEn      DateTime     @default(now())
+
+  @@index([puestoId])
+  @@index([fecha])
+  @@map("pagos")
+}
+
+model Config {
+  clave String @id
+  valor String
+
+  @@map("config")
+}
+
+// ---------------------------------------------------------------------------
+// Cervecería — sistema aparte del de alquileres
+// ---------------------------------------------------------------------------
+
+model CategoriaBebida {
+  id     String  @id @default(cuid())
+  nombre String  @unique
+  /// Nombre del ícono de lucide que se muestra en el anillo del POS
+  icono  String  @default("Beer")
+  orden  Int     @default(0)
+  activa Boolean @default(true)
+
+  productos ProductoBebida[]
+
+  @@map("cat_bebidas")
+}
+
+model ProductoBebida {
+  id           String          @id @default(cuid())
+  nombre       String
+  /// "330ML", "2,5L" — como se muestra debajo del nombre
+  presentacion String
+  categoriaId  String
+  categoria    CategoriaBebida @relation(fields: [categoriaId], references: [id])
+  precio       Decimal         @db.Decimal(12, 2)
+  /// Lo que cuesta reponerlo. Con esto el inventario sabe cuánta plata tiene
+  /// parada en el depósito y el reporte puede mostrar margen.
+  costo        Decimal         @default(0) @db.Decimal(12, 2)
+  /// Litros que descuenta cada unidad vendida del stock de barril
+  litros       Float           @default(0)
+  /// Si sale de barril descuenta litros; si no, descuenta unidades
+  deBarril     Boolean         @default(true)
+  /// Solo para los que no son de barril
+  stock        Float           @default(0)
+  /// Debajo de esto el inventario lo marca como "reponer"
+  stockMinimo  Float           @default(6)
+  imagen       String?
+  color        String          @default("#FFC200")
+  activo       Boolean         @default(true)
+  orden        Int             @default(0)
+  creadoEn     DateTime        @default(now())
+  editadoEn    DateTime        @updatedAt
+
+  lineas      LineaVentaBebida[]
+  movimientos MovimientoStock[]
+
+  @@index([categoriaId])
+  @@map("productos_bebida")
+}
+
+/// Litros de cerveza disponibles en los barriles conectados.
+model Barril {
+  id         String   @id @default(cuid())
+  estilo     String
+  capacidadL Float    @default(50)
+  restanteL  Float    @default(50)
+  conectado  Boolean  @default(true)
+  creadoEn   DateTime @default(now())
+
+  movimientos MovimientoStock[]
+
+  @@map("barriles")
+}
+
+/// Mesa del salón. Una mesa está ocupada mientras tenga una comanda abierta:
+/// el estado no se guarda, se deduce de las ventas en curso.
+model MesaBar {
+  id        String  @id @default(cuid())
+  numero    String  @unique
+  nombre    String?
+  capacidad Int     @default(4)
+  sector    String  @default("Salón")
+  orden     Int     @default(0)
+  activa    Boolean @default(true)
+
+  ventas VentaBebida[]
+
+  @@map("mesas_bar")
+}
+
+/// Cliente del bar. Sirve para las cuentas por mesa y para saber quién compra.
+model ClienteBar {
+  id        String   @id @default(cuid())
+  nombre    String
+  telefono  String?
+  email     String?
+  documento String?
+  notas     String?
+  creadoEn  DateTime @default(now())
+
+  ventas VentaBebida[]
+
+  @@index([nombre])
+  @@map("clientes_bar")
+}
+
+/// Turno de caja: de la apertura al arqueo. Las ventas se cuelgan del turno
+/// abierto para poder cerrarlo con el detalle de lo cobrado.
+model CajaTurno {
+  id             String    @id @default(cuid())
+  nombre         String    @default("Caja 1")
+  abiertaEn      DateTime  @default(now())
+  cerradaEn      DateTime?
+  montoInicial   Decimal   @default(0) @db.Decimal(12, 2)
+  /// Lo que contó la cajera al cerrar; contra esto se calcula la diferencia.
+  montoDeclarado Decimal?  @db.Decimal(12, 2)
+  abiertaPor     String?
+  cerradaPor     String?
+  notas          String?
+
+  ventas VentaBebida[]
+
+  @@index([abiertaEn])
+  @@map("cajas_turno")
+}
+
+enum EstadoVentaBebida {
+  /// Comanda de mesa todavía sin cobrar
+  ABIERTA
+  COMPLETADA
+  ANULADA
+}
+
+model VentaBebida {
+  id        String            @id @default(cuid())
+  ticket    String            @unique
+  total     Decimal           @db.Decimal(12, 2)
+  descuento Decimal           @default(0) @db.Decimal(12, 2)
+  metodo    String            @default("Efectivo")
+  estado    EstadoVentaBebida @default(COMPLETADA)
+  cajera    String?
+  /// Cuándo se cobró. En una comanda abierta es la hora en que se abrió, y se
+  /// pisa al cobrarla, para que los reportes midan por fecha de cobro.
+  fecha     DateTime          @default(now())
+  abiertaEn DateTime          @default(now())
+  notas     String?
+
+  mesaId    String?
+  mesa      MesaBar?    @relation(fields: [mesaId], references: [id])
+  clienteId String?
+  cliente   ClienteBar? @relation(fields: [clienteId], references: [id])
+  cajaId    String?
+  caja      CajaTurno?  @relation(fields: [cajaId], references: [id])
+
+  lineas      LineaVentaBebida[]
+  movimientos MovimientoStock[]
+
+  @@index([fecha])
+  @@index([estado])
+  @@index([mesaId])
+  @@map("ventas_bebida")
+}
+
+model LineaVentaBebida {
+  id         String         @id @default(cuid())
+  ventaId    String
+  venta      VentaBebida    @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+  productoId String
+  producto   ProductoBebida @relation(fields: [productoId], references: [id])
+  nombre     String
+  precioUnit Decimal        @db.Decimal(12, 2)
+  cantidad   Int
+  total      Decimal        @db.Decimal(12, 2)
+
+  @@index([ventaId])
+  @@map("lineas_venta_bebida")
+}
+
+/// Por qué se movió el stock. `VENTA` y `ANULACION` los escribe el POS solo;
+/// los demás salen de la pantalla de inventario.
+enum TipoMovimiento {
+  INGRESO
+  AJUSTE
+  MERMA
+  VENTA
+  ANULACION
+}
+
+/// Cada entrada y salida de stock, de productos o de barriles. Es el respaldo
+/// de lo que muestra el inventario: sin esto, un faltante no se puede explicar.
+model MovimientoStock {
+  id         String          @id @default(cuid())
+  tipo       TipoMovimiento
+  productoId String?
+  producto   ProductoBebida? @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  barrilId   String?
+  barril     Barril?         @relation(fields: [barrilId], references: [id], onDelete: Cascade)
+  /// Positivo si entra, negativo si sale.
+  cantidad   Float
+  /// "u" para unidades, "L" para litros de barril
+  unidad     String          @default("u")
+  /// Cómo quedó el stock después del movimiento, para poder auditarlo
+  saldo      Float?
+  motivo     String?
+  ventaId    String?
+  venta      VentaBebida?    @relation(fields: [ventaId], references: [id], onDelete: SetNull)
+  usuario    String?
+  fecha      DateTime        @default(now())
+
+  @@index([fecha])
+  @@index([productoId])
+  @@index([barrilId])
+  @@map("movimientos_stock")
+}
