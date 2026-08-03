@@ -82,7 +82,7 @@ npm run demo:alquileres    # patio    → http://localhost:3000
 npm run demo:cerveceria    # cervecería → http://localhost:3001
 ```
 
-En el navegador, entrar a <http://localhost:3000> con:
+En el navegador, entrar a <http://localhost:3000/alquileres> con:
 
 | Usuario    | Contraseña | Rol           |
 | ---------- | ---------- | ------------- |
@@ -98,8 +98,8 @@ colgado de la red.
 2. Abrir dos PowerShell en `C:\contenedores` y correr en cada una:
    - `npm run demo:alquileres`
    - `npm run demo:cerveceria`
-3. Abrir el navegador en <http://localhost:3000> (patio) y
-   <http://localhost:3001> (cervecería).
+3. Abrir el navegador en <http://localhost:3000/alquileres> (patio) y
+   <http://localhost:3001/cerveza> (cervecería).
 4. Dejar las dos ventanas de PowerShell abiertas y minimizadas: si se cierran,
    se cae el servidor.
 

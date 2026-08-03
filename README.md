@@ -23,7 +23,9 @@ npm run db:seed-cerveceria  # catálogo, barriles, caja y ventas del bar
 npm run dev
 ```
 
-Abrir http://localhost:3000
+Abrir http://localhost:3000 — la raíz manda a `/alquileres`, y el bar está en
+`/cerveza`. Los dos negocios cuelgan de su propia rama de rutas, así que todo se
+publica como una sola aplicación.
 
 ### Un sistema por puerto
 
@@ -37,8 +39,9 @@ npm run dev:cerveceria   # http://localhost:3001  → solo el bar
 npm run dev:ambos        # los dos a la vez, cada uno en su puerto
 ```
 
-En el 3000, cualquier `/cerveceria/…` rebota a `/`; en el 3001, todo lo que no
-sea del bar rebota a `/cerveceria`. El login (`/ingresar`) y las rutas de API
+En el 3000, cualquier `/cerveza/…` rebota a `/alquileres`; en el 3001, todo lo
+que no sea del bar rebota a `/cerveza`. Para la web no hace falta la variable:
+un solo proceso sirve las dos ramas. El login (`/ingresar`) y las rutas de API
 funcionan en los dos. Sin la variable —`npm run dev`— se sirven los dos sistemas
 en un mismo puerto, como antes.
 
@@ -212,7 +215,7 @@ vuelve el patio a los 12 puestos originales del prototipo.
 
 ### Cervecería
 
-El otro negocio, con su propio menú en `/cerveceria`:
+El otro negocio, con su propio menú en `/cerveza`:
 
 - **Resumen** — recaudado y tickets del día, litros disponibles y servidos, lo
   más vendido, cómo se cobró y a qué hora se vende.
@@ -334,7 +337,7 @@ src/
   app/
     (auth)/ingresar/         login
 
-    (alquileres)/            ── ALQUILERES ── URLs: / /plano /puestos /pagos …
+    alquileres/              ── ALQUILERES ── URLs: /alquileres /alquileres/plano …
       layout.tsx             menú lateral, barra superior y splash
       page.tsx               Dashboard Analytics
       plano|puestos|pagos|historial|arrendatarios/  las otras cinco vistas
@@ -352,7 +355,7 @@ src/
         iso.ts               geometría isométrica
         demo.ts              datos del "Restablecer Demo"
 
-    (cerveceria)/cerveceria/ ── VENTA DE CERVEZA ── URLs: /cerveceria …
+    cerveza/                 ── VENTA DE CERVEZA ── URLs: /cerveza /cerveza/venta …
       layout.tsx             shell propio, con su menú
       page.tsx               resumen del día
       venta|ventas|inventario|caja|reportes|configuracion/
@@ -398,8 +401,8 @@ arrastran el paréntesis del route group:
 
 | Alias           | Apunta a                          |
 | --------------- | --------------------------------- |
-| `@alquileres/*` | `src/app/(alquileres)/*`          |
-| `@cerveceria/*` | `src/app/(cerveceria)/cerveceria/*` |
+| `@alquileres/*` | `src/app/alquileres/*`            |
+| `@cerveza/*`    | `src/app/cerveza/*`               |
 | `@/*`           | `src/*` (lo compartido)           |
 
 ## Comandos
